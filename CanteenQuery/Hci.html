@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CanteenQ Dashboard Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#F97316;--dark:#1F2937;--bg:#F8FAFC;--surface:#fff;--input:#F1F5F9;--gray:#64748B;--text:#1F2937;--border:#E2E8F0;--ok:#16A34A;--warn:#F59E0B;--err:#DC2626;--info:#2563EB;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F172A;--surface:#1E293B;--input:#0F172A;--gray:#94A3B8;--text:#F1F5F9;--border:#334155}}
+:root[data-theme="dark"]{--bg:#0F172A;--surface:#1E293B;--input:#0F172A;--gray:#94A3B8;--text:#F1F5F9;--border:#334155}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0}
+button{font:inherit;cursor:pointer}
+/* login */
+#login{display:grid;grid-template-columns:1fr 1fr;min-height:100%}
+.brand{background:#1F2937;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:32px}
+.brand svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.brand>*:not(.bg){position:relative}
+.logo{width:96px;height:96px;border-radius:24px;background:#fff;display:grid;place-items:center;margin-bottom:20px}
+.brand h2{font-size:36px;font-weight:700}.brand p{color:#CBD5E1;font-size:16px;margin:8px 0 0}
+.formwrap{display:grid;place-items:center;padding:32px;background:var(--surface)}
+form{width:100%;max-width:400px;display:flex;flex-direction:column;gap:20px}
+form h1{font-size:32px;font-weight:700}.sub{color:var(--gray);margin:-12px 0 0}
+label{display:block;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
+.in{position:relative}.in input{width:100%;height:48px;border-radius:8px;border:1.5px solid transparent;background:var(--input);color:var(--text);padding:0 44px 0 16px;font:inherit;outline:none}
+.in input:focus{border-color:var(--primary)}.in input.bad{border-color:var(--err)}
+.eye{position:absolute;right:6px;top:6px;height:36px;width:36px;border:0;background:none;color:var(--gray);font-size:16px}
+.err{color:var(--err);font-size:13px;margin-top:6px}.hint{color:var(--gray);font-size:12px;margin-top:6px}
+.row{display:flex;justify-content:flex-end;margin-top:-8px}
+a.l{color:var(--gray);font-size:13px;text-decoration:none}a.l:hover{text-decoration:underline;color:var(--primary)}
+.pbtn{height:48px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-weight:600;transition:filter .15s}
+.pbtn:hover{filter:brightness(.92)}
+.center{text-align:center;color:var(--gray);font-size:13px}
+/* app */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100%}
+.side{background:var(--dark);color:#CBD5E1;padding:24px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100%;max-height:100vh}
+.side .lg{display:flex;align-items:center;gap:10px;color:#fff;font:700 20px Poppins,sans-serif;margin:0 8px 24px}
+.side .lg span{width:36px;height:36px;border-radius:10px;background:#fff;display:grid;place-items:center}
+.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:0;background:none;color:inherit;text-align:left;width:100%}
+.nav:hover{background:rgba(255,255,255,.07)}.nav.on{background:var(--primary);color:#fff}
+.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 12px;border:0;background:rgba(255,255,255,.06);border-radius:10px;color:#fff;text-align:left}
+.av{width:32px;height:32px;border-radius:50%;background:var(--primary);display:grid;place-items:center;font-weight:600;flex:none}
+.main{min-width:0}.top{height:72px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 32px}
+.top h1{font-size:22px}.top .s{margin-left:auto;height:40px;width:260px;max-width:40%;border-radius:8px;border:0;background:var(--input);color:var(--text);padding:0 14px;font:inherit}
+.bell{position:relative;font-size:20px}.bell i{position:absolute;top:-4px;right:-6px;background:var(--err);color:#fff;font:600 10px Inter;border-radius:10px;padding:1px 5px}
+.pad{padding:32px;display:grid;gap:24px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.g2{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.card{background:var(--surface);border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);min-width:0}
+.card h3{font-size:16px;margin-bottom:14px}.stat small{color:var(--gray)}.stat b{display:block;font:700 28px Poppins,sans-serif;margin-top:4px}
+.up{color:var(--ok);font-size:12px;font-weight:600}.dn{color:var(--warn);font-size:12px;font-weight:600}
+.chart{display:flex;align-items:flex-end;gap:14px;height:190px;padding-top:8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;font-size:12px;color:var(--gray)}
+.bar div{width:100%;max-width:44px;border-radius:6px 6px 0 0;background:var(--primary);opacity:.55;transition:opacity .15s}.bar:hover div{opacity:1}.bar.t div{opacity:1}
+.li{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--border)}.li:first-of-type{border-top:0}
+.em{width:40px;height:40px;border-radius:10px;background:var(--input);display:grid;place-items:center;font-size:20px;flex:none}
+.li .g{flex:1;min-width:0}.li small{color:var(--gray)}
+.pb{height:6px;border-radius:3px;background:var(--input);margin-top:6px;overflow:hidden}.pb i{display:block;height:100%;background:var(--warn)}.pb i.r{background:var(--err)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:620px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);text-align:left;padding:8px 10px;font-weight:500}
+td{padding:12px 10px;border-top:1px solid var(--border)}
+.b{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.New{background:#2563EB22;color:var(--info)}.Preparing{background:#F59E0B26;color:#B45309}.Ready{background:#16A34A22;color:var(--ok)}.Done{background:var(--input);color:var(--gray)}
+.sm{height:32px;padding:0 12px;border-radius:8px;border:1.5px solid var(--primary);background:none;color:var(--primary);font-weight:600;font-size:13px}
+.sm:hover:not(:disabled){background:var(--primary);color:#fff}.sm:disabled{border-color:var(--border);color:var(--gray);cursor:default}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.app{grid-template-columns:1fr}
+.side{position:static;height:auto;max-height:none;flex-direction:row;overflow-x:auto;align-items:center}.side .lg{margin:0 12px 0 0}.nav{width:auto;white-space:nowrap}.me{margin:0 0 0 auto}.top{padding:0 16px}.pad{padding:16px}}
+@media(max-width:800px){#login{grid-template-columns:1fr}.brand{min-height:240px}}
+</style></head><body>
+
+<section id="login">
+ <div class="brand">
+  <svg class="bg" viewBox="0 0 720 1024" preserveAspectRatio="xMidYMid slice" fill="#F97316" fill-opacity=".12"><circle cx="90" cy="120" r="110"/><circle cx="190" cy="190" r="90"/><circle cx="600" cy="90" r="130"/><circle cx="520" cy="200" r="70"/><circle cx="110" cy="860" r="140"/><circle cx="250" cy="940" r="80"/><circle cx="620" cy="800" r="120"/><circle cx="680" cy="930" r="90"/></svg>
+  <div class="logo"><svg width="52" height="52" viewBox="0 0 52 52" fill="none"><rect x="8" y="6" width="4" height="16" rx="2" fill="#1F2937"/><rect x="16" y="6" width="4" height="16" rx="2" fill="#1F2937"/><rect x="24" y="6" width="4" height="16" rx="2" fill="#1F2937"/><path d="M8 20h20v3a10 10 0 0 1-20 0z" fill="#1F2937"/><rect x="16" y="26" width="4" height="20" rx="2" fill="#1F2937"/><circle cx="38" cy="30" r="9" fill="#F97316"/><path d="M42 36l4 5" stroke="#F97316" stroke-width="3" stroke-linecap="round"/></svg></div>
+  <h2>CanteenQ</h2><p>Serve faster. Can't wait. Waste less.</p>
+ </div>
+ <div class="formwrap">
+  <form id="f" novalidate>
+   <h1>Welcome back</h1><p class="sub">Sign in to manage your canteen</p>
+   <div><label for="em">Email</label><div class="in"><input id="em" type="email" value="maria@canteenq.com"></div></div>
+   <div><label for="pw">Password</label><div class="in"><input id="pw" type="password" placeholder="••••••••"><button type="button" class="eye" id="eye" aria-label="Show password">👁</button></div>
+    <div class="err" id="err" hidden>Incorrect password. Please try again.</div><div class="hint">Demo password: canteenq</div></div>
+   <div class="row"><a class="l" href="#" data-t="Password reset is not part of this prototype">Forgot password?</a></div>
+   <button class="pbtn" type="submit">Log in</button>
+   <div class="center">Don't have an account? <a class="l" href="#" data-t="Sign-up is not part of this prototype">Sign up</a></div>
+  </form>
+ </div>
+</section>
+
+<section class="app" id="app" hidden>
+ <aside class="side">
+  <div class="lg"><span><svg width="22" height="22" viewBox="0 0 52 52" fill="#1F2937"><rect x="8" y="6" width="5" height="16" rx="2"/><rect x="19" y="6" width="5" height="16" rx="2"/><path d="M8 20h16v3a8 8 0 0 1-16 0z"/><rect x="14" y="26" width="5" height="20" rx="2"/><circle cx="38" cy="30" r="9" fill="#F97316"/></svg></span>CanteenQ</div>
+  <button class="nav on">📊 Overview</button><button class="nav" data-t="Live Orders screen comes next">🧾 Live Orders</button><button class="nav" data-t="Menu screen comes next">🍽 Menu</button><button class="nav" data-t="Inventory screen comes next">📦 Inventory</button><button class="nav" data-t="Analytics screen comes next">📈 Analytics</button><button class="nav" data-t="Settings screen comes next">⚙️ Settings</button>
+  <button class="me" id="out" title="Log out"><span class="av">M</span><span>Maria Santos<br><small style="color:#94A3B8">Manager · Log out</small></span></button>
+ </aside>
+ <div class="main">
+  <div class="top"><h1>Overview</h1><input class="s" placeholder="Search orders, items…" aria-label="Search"><span class="bell">🔔<i>3</i></span></div>
+  <div class="pad">
+   <div class="g4">
+    <div class="card stat"><small>Today's Sales</small><b>₱12,450</b><span class="up">▲ 12% vs yesterday</span></div>
+    <div class="card stat"><small>Orders Today</small><b>148</b><span class="up">▲ 8% vs yesterday</span></div>
+    <div class="card stat"><small>Pending Orders</small><b id="pend">0</b><span class="dn">Needs attention</span></div>
+    <div class="card stat"><small>Low-Stock Items</small><b>3</b><span class="dn">Restock soon</span></div>
+   </div>
+   <div class="g2">
+    <div class="card"><h3>Sales This Week (₱ thousands)</h3><div class="chart" id="chart"></div></div>
+    <div class="card"><h3>Top Sellers</h3>
+     <div class="li"><span class="em">🍗</span><div class="g"><b>Chicken Adobo</b><br><small>64 sold today</small></div><b>₱65</b></div>
+     <div class="li"><span class="em">🍝</span><div class="g"><b>Spaghetti</b><br><small>41 sold today</small></div><b>₱45</b></div>
+     <div class="li"><span class="em">🥤</span><div class="g"><b>Iced Tea</b><br><small>38 sold today</small></div><b>₱25</b></div>
+     <div class="li"><span class="em">🍞</span><div class="g"><b>Pandesal (3 pcs)</b><br><small>30 sold today</small></div><b>₱20</b></div>
+    </div>
+   </div>
+   <div class="g2">
+    <div class="card"><h3>Recent Orders</h3><div class="tw"><table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+    <div class="card"><h3>Low Stock Alerts</h3>
+     <div class="li"><span class="em">🍗</span><div class="g"><b>Chicken Adobo</b><br><small>6 servings left</small><div class="pb"><i class="r" style="width:12%"></i></div></div></div>
+     <div class="li"><span class="em">🥤</span><div class="g"><b>Iced Tea</b><br><small>14 cups left</small><div class="pb"><i style="width:28%"></i></div></div></div>
+     <div class="li"><span class="em">🍞</span><div class="g"><b>Pandesal</b><br><small>20 pcs left</small><div class="pb"><i style="width:35%"></i></div></div></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<script>
+const $=s=>document.querySelector(s);
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(t){e.preventDefault();toast(t.dataset.t)}});
+$('#eye').onclick=()=>{const p=$('#pw');p.type=p.type==='password'?'text':'password'};
+$('#f').addEventListener('submit',e=>{e.preventDefault();const ok=$('#pw').value==='canteenq';$('#pw').classList.toggle('bad',!ok);$('#err').hidden=ok;if(ok){$('#login').hidden=true;$('#app').hidden=false;scrollTo(0,0)}});
+$('#out').onclick=()=>{$('#app').hidden=true;$('#login').hidden=false;$('#pw').value=''};
+const orders=[{id:'#1048',c:'Ana Cruz',i:'2× Chicken Adobo, 1× Iced Tea',t:155,s:'New'},{id:'#1047',c:'Luis Reyes',i:'1× Spaghetti, 1× Pandesal',t:65,s:'New'},{id:'#1046',c:'Mia Santos',i:'3× Pandesal, 2× Iced Tea',t:110,s:'Preparing'},{id:'#1045',c:'Paolo Diaz',i:'1× Chicken Adobo',t:65,s:'Ready'},{id:'#1044',c:'Joy Lim',i:'2× Spaghetti',t:90,s:'Picked up'}];
+const flow=['New','Preparing','Ready','Picked up'],lab={New:'Start preparing',Preparing:'Mark ready',Ready:'Picked up','Picked up':'Done'};
+function render(){$('#rows').innerHTML=orders.map((o,k)=>`<tr><td><b>${o.id}</b></td><td>${o.c}</td><td>${o.i}</td><td>₱${o.t}</td><td><span class="b ${o.s=='Picked up'?'Done':o.s}">${o.s}</span></td><td><button class="sm" data-k="${k}" ${o.s=='Picked up'?'disabled':''}>${lab[o.s]}</button></td></tr>`).join('');
+$('#pend').textContent=orders.filter(o=>o.s=='New'||o.s=='Preparing').length}
+$('#rows').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const o=orders[b.dataset.k];o.s=flow[flow.indexOf(o.s)+1];toast(o.id+' is now '+o.s);render()});
+const d=[['Mon',8.2],['Tue',9.6],['Wed',7.4],['Thu',10.9],['Fri',12.4],['Sat',6.1],['Sun',12.45]];
+$('#chart').innerHTML=d.map((x,k)=>`<div class="bar ${k==6?'t':''}" title="₱${x[1]}k">${x[1]}<div style="height:${x[1]/13*80}%"></div>${x[0]}</div>`).join('');
+render();
+</script></body></html>
